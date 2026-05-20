@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500&family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#fff;--bg2:#f8f8f7;--border:#e8e7e3;--mid:#888580;--body:#2a2925;--head:#111009;--accent:#2563eb;--green:#16a34a;--red:#dc2626;--mono:"DM Mono",monospace;--serif:"Lora",Georgia,serif;--sans:"DM Sans",-apple-system,sans-serif;--r:6px;--max:900px}
+:root{--bg:#fff;--bg2:#f8f8f7;--border:#e8e7e3;--mid:#888580;--body:#2a2925;--head:#111009;--accent:#2563eb;--green:#16a34a;--red:#dc2626;--mono:"DM Mono",monospace;--serif:"Lora",Georgia,serif;--sans:"DM Sans",-apple-system,sans-serif;--r:6px;--max:1100px}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:var(--bg);color:var(--body);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
@@ -44,7 +44,7 @@ nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-f
 .cb{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03)}
 .dots{display:flex;gap:5px}
 .d{width:9px;height:9px;border-radius:50%}
-.dr{background:#ff5f57}.dy{background:#ffbd2e}.dg{background:#28c840}
+.dr{background:#ff5f57}.dy{background:#ffbd2e}.dgr{background:#28c840}
 .ct{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.25)}
 .code pre{padding:20px 22px;font-family:var(--mono);font-size:13px;line-height:1.8;color:#e4e4e7;overflow-x:auto;white-space:pre}
 .kw{color:#a78bfa}.fn{color:#93c5fd}.st{color:#6ee7b7}.cm{color:#71717a;font-style:italic}.nm{color:#fbbf24}.cl{color:#f9a8d4}
@@ -198,21 +198,18 @@ footer a:hover{color:var(--head);text-decoration:none}
   <div class="fdw">
     <div class="fd active" id="fd-zoom"><div class="fdc">
       <div class="fdi"><h3>Zoom &amp; Pan</h3><p>The Zoom tool is default. Just set <code>zoom=True</code>.</p><ul><li><strong>Left-drag horizontally</strong> &rarr; zoom X to selection</li><li><strong>Left-drag vertically</strong> &rarr; zoom Y axis</li><li><strong>Double-click</strong> &rarr; reset to full range</li><li>60fps regardless of dataset size</li></ul></div>
-      <div class="fcode"><span class="kw">import</span> youplot <span class="kw">as</span> fp
+      <div class="fcode"><span class="kw">import </span> youplot <span class="kw">as</span> yp
 
-fig = fp.<span class="cl">Figure</span>(
-    title = <span class="st">"Engine Temperature"</span>,
-    zoom  = <span class="kw">True</span>,  <span class="cm"># enables toolbar</span>
-)
+fig = yp.<span class="cl">Figure</span>(title=<span class="st">"Engine Temperature"</span>, zoom=<span class="kw">True</span>)  <span class="cm"># enables toolbar</span>
 fig.<span class="fn">line</span>(ts_ms, temp, label=<span class="st">"&#176;C"</span>)
 fig.<span class="fn">save</span>(<span class="st">"chart.html"</span>)</div>
     </div></div>
     <div class="fd" id="fd-sync"><div class="fdc">
       <div class="fdi"><h3>Crosshair Sync</h3><p>All charts on a page share a cursor automatically. Each shows its own tooltip.</p><ul><li>No configuration &mdash; just combine figures</li><li>Each chart tooltip shows its own series independently</li><li>Works across any number of charts</li></ul></div>
-      <div class="fcode">fig1 = fp.<span class="cl">Figure</span>(title=<span class="st">"Temperature"</span>, zoom=<span class="kw">True</span>)
+      <div class="fcode">fig1 = yp.<span class="cl">Figure</span>(title=<span class="st">"Temperature"</span>, zoom=<span class="kw">True</span>)
 fig1.<span class="fn">line</span>(ts_ms, temp, label=<span class="st">"&#176;C"</span>)
 
-fig2 = fp.<span class="cl">Figure</span>(title=<span class="st">"Humidity"</span>, zoom=<span class="kw">True</span>)
+fig2 = yp.<span class="cl">Figure</span>(title=<span class="st">"Humidity"</span>, zoom=<span class="kw">True</span>)
 fig2.<span class="fn">line</span>(ts_ms, hum, label=<span class="st">"%"</span>)
 
 <span class="cm"># Crosshair sync is automatic</span>
@@ -255,10 +252,7 @@ fig.<span class="fn">pin</span>(
       <div class="fcode"><span class="cm"># Measure tool is UI-only.</span>
 <span class="cm"># Just enable zoom=True.</span>
 
-fig = fp.<span class="cl">Figure</span>(
-    title = <span class="st">"Signal Analysis"</span>,
-    zoom  = <span class="kw">True</span>,
-)
+fig = yp.<span class="cl">Figure</span>(title=<span class="st">"Signal Analysis"</span>, zoom=<span class="kw">True</span>)
 fig.<span class="fn">line</span>(ts_ms, signal_a, label=<span class="st">"Ch A"</span>)
 fig.<span class="fn">line</span>(ts_ms, signal_b, label=<span class="st">"Ch B"</span>)
 fig.<span class="fn">save</span>(<span class="st">"analysis.html"</span>)
@@ -286,38 +280,27 @@ fig.<span class="fn">hline</span>(
 <div class="sec" id="quickstart">
   <p class="lbl">Quickstart</p>
   <h2>Python in. HTML out.</h2>
-  <div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><span class="ct">quickstart.py</span></div><pre><span class="kw">import</span> youplot <span class="kw">as</span> fp
+  <div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dgr"></div></div><span class="ct">quickstart.py</span></div><pre><span class="kw">import </span> youplot <span class="kw">as</span> yp
 
 ts_ms = [<span class="nm">1_700_000_000_000</span> + i * <span class="nm">1000</span> <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">86_400</span>)]  <span class="cm"># unix ms</span>
 
-fig = fp.<span class="cl">Figure</span>(title=<span class="st">"24h Temperature"</span>, zoom=<span class="kw">True</span>, legend=<span class="kw">True</span>)
+fig = yp.<span class="cl">Figure</span>(title=<span class="st">"24h Temperature"</span>, zoom=<span class="kw">True</span>, legend=<span class="kw">True</span>)
 fig.<span class="fn">line</span>(ts_ms, temp, label=<span class="st">"&#176;C"</span>, color=<span class="st">"#f97316"</span>, fill=<span class="kw">True</span>)
 fig.<span class="fn">band</span>(y_lo=<span class="nm">18</span>, y_hi=<span class="nm">24</span>, label=<span class="st">"Comfort"</span>, color=<span class="st">"#10b981"</span>)
 fig.<span class="fn">vline</span>(x=ts_ms[<span class="nm">3600</span>], label=<span class="st">"Event"</span>, color=<span class="st">"#dc2626"</span>)
 fig.<span class="fn">save</span>(<span class="st">"temperature.html"</span>)   <span class="cm"># open in any browser</span></pre></div>
-  <div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><span class="ct">dashboard.py &mdash; synced multi-chart</span></div><pre>fig1 = fp.<span class="cl">Figure</span>(title=<span class="st">"Engine"</span>, height=<span class="nm">380</span>, zoom=<span class="kw">True</span>)
+  <div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dgr"></div></div><span class="ct">dashboard.py &mdash; synced multi-chart</span></div><pre>fig1 = yp.<span class="cl">Figure</span>(title=<span class="st">"Engine"</span>, height=<span class="nm">380</span>, zoom=<span class="kw">True</span>)
 fig1.<span class="fn">line</span>(ts_ms, coolant, label=<span class="st">"Coolant &#176;C"</span>, color=<span class="st">"#ef4444"</span>)
 fig1.<span class="fn">line</span>(ts_ms, oil,     label=<span class="st">"Oil &#176;C"</span>,     color=<span class="st">"#f97316"</span>, dash=<span class="kw">True</span>)
 fig1.<span class="fn">tag</span>(x_start=fault_start, x_end=fault_end, label=<span class="st">"Fault"</span>)
 fig1.<span class="fn">pin</span>(ts_ms[peak_idx], label=<span class="st">"Peak: 127&#176;C"</span>, y_frac=<span class="nm">0.1</span>)
 
-fig2 = fp.<span class="cl">Figure</span>(title=<span class="st">"RPM &amp; Fuel"</span>, height=<span class="nm">280</span>, zoom=<span class="kw">True</span>)
+fig2 = yp.<span class="cl">Figure</span>(title=<span class="st">"RPM &amp; Fuel"</span>, height=<span class="nm">280</span>, zoom=<span class="kw">True</span>)
 fig2.<span class="fn">line</span>(ts_ms, rpm,  label=<span class="st">"RPM"</span>,      color=<span class="st">"#6366f1"</span>)
 fig2.<span class="fn">line</span>(ts_ms, fuel, label=<span class="st">"Fuel PSI"</span>, color=<span class="st">"#16a34a"</span>)
 
-dash = fig1 + fig2  <span class="cm"># or fp.combine(fig1, fig2)</span>
+dash = fig1 + fig2  <span class="cm"># or yp.combine(fig1, fig2)</span>
 dash.<span class="fn">save</span>(<span class="st">"engine.html"</span>)</pre></div>
-</div>
-
-<div class="sec" id="usecases">
-  <p class="lbl">Use cases</p><h2>Who uses it.</h2>
-  <div class="cl">
-    <div class="ci"><div class="ct2">IoT / Sensors</div><div><h3>Device Telemetry</h3><p>Millions of sensor readings &mdash; temperature, voltage, vibration &mdash; from embedded systems or vehicles. Share fault analysis as a single HTML file, no backend.</p></div></div>
-    <div class="ci"><div class="ct2">Observability</div><div><h3>Infrastructure Metrics</h3><p>CPU, memory, latency, error rates in a self-contained file for incident post-mortems. No Grafana setup required.</p></div></div>
-    <div class="ci"><div class="ct2">Finance</div><div><h3>Market &amp; Strategy Data</h3><p>OHLCV lines, strategy signals, drawdown curves. Fast zoom over years of tick data. Tag regime changes, annotate signals.</p></div></div>
-    <div class="ci"><div class="ct2">Science</div><div><h3>Experimental Data</h3><p>Multi-channel recordings, climate model output, lab instrument data. HTML embeds in Jupyter &mdash; reviewers interact with actual data.</p></div></div>
-    <div class="ci"><div class="ct2">ML / AI</div><div><h3>Training Runs</h3><p>Loss curves, schedules, validation metrics. Pin convergence events, tag overfitting windows, compare runs with crosshair sync.</p></div></div>
-  </div>
 </div>
 
 <div class="sec" id="uplot">
@@ -342,7 +325,7 @@ dash.<span class="fn">save</span>(<span class="st">"engine.html"</span>)</pre></
     <div class="da">
 
 <div class="de" id="di"><h2>Installation</h2><p>Requires Python 3.10+. No runtime dependencies.</p>
-<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre><span style="color:#71717a">$ </span>pip install youplot</pre></div>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dgr"></div></div></div><pre><span style="color:#71717a">$ </span>pip install youplot</pre></div>
 <p>The uPlot JS runtime (50 KB) is bundled. Generated HTML files work offline and open from <code>file://</code>.</p></div>
 
 <div class="de" id="dc"><h2>Concepts</h2>
@@ -350,16 +333,7 @@ dash.<span class="fn">save</span>(<span class="st">"engine.html"</span>)</pre></
 <p>Timeseries auto-detected when x values exceed <code>1e11</code>. Axis labels and tooltips format automatically.</p></div>
 
 <div class="de" id="df"><h2>Figure()</h2>
-<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig = fp.<span class="cl">Figure</span>(
-  title    = <span class="st">"My Chart"</span>,
-  subtitle = <span class="st">"Optional"</span>,
-  theme    = <span class="st">"light"</span>,    <span class="cm"># "light" | "dark"</span>
-  height   = <span class="nm">400</span>,
-  width    = <span class="kw">None</span>,        <span class="cm"># None = 100% container</span>
-  y_label  = <span class="st">"Signal"</span>,
-  zoom     = <span class="kw">True</span>,
-  legend   = <span class="kw">True</span>,
-)</pre></div>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dgr"></div></div></div><pre>fig = yp.<span class="cl">Figure</span>(title=<span class="st">"My Chart"</span>, subtitle=<span class="st">"Optional"</span>, theme=<span class="st">"light"</span>, height=<span class="nm">400</span>, width=<span class="kw">None</span>, y_label=<span class="st">"Signal"</span>, zoom=<span class="kw">True</span>, legend=<span class="kw">True</span>)</pre></div>
 <p>All methods return <code>self</code> for chaining.</p>
 <table class="pt"><tr><th>Param</th><th>Default</th><th>Description</th></tr>
 <tr><td>title</td><td>""</td><td>Chart title.</td></tr>
@@ -373,7 +347,7 @@ dash.<span class="fn">save</span>(<span class="st">"engine.html"</span>)</pre></
 </table></div>
 
 <div class="de" id="dl"><h2>line()</h2>
-<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">line</span>(
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dgr"></div></div></div><pre>fig.<span class="fn">line</span>(
   x, y,               <span class="cm"># required: lists of numbers</span>
   label        = <span class="st">""</span>,
   color        = <span class="kw">None</span>,  <span class="cm"># hex, named, or auto</span>
@@ -390,30 +364,30 @@ dash.<span class="fn">save</span>(<span class="st">"engine.html"</span>)</pre></
 )</pre></div></div>
 
 <div class="de" id="dsc"><h2>scatter()</h2>
-<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">scatter</span>(x, y, label=<span class="st">""</span>, color=<span class="kw">None</span>,
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dgr"></div></div></div><pre>fig.<span class="fn">scatter</span>(x, y, label=<span class="st">""</span>, color=<span class="kw">None</span>,
   size=<span class="nm">6.0</span>, size_by=<span class="kw">None</span>, size_range=[<span class="nm">3.0</span>,<span class="nm">18.0</span>],
   color_by=<span class="kw">None</span>, shape=<span class="st">"circle"</span>, trendline=<span class="kw">False</span>,
   jitter_x=<span class="nm">0.0</span>, jitter_y=<span class="nm">0.0</span>)</pre></div></div>
 
 <div class="de" id="db"><h2>band()</h2>
 <p>Horizontal shaded band for normal ranges, SLA limits, alert zones.</p>
-<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">band</span>(y_lo=<span class="nm">18</span>, y_hi=<span class="nm">24</span>, label=<span class="st">"Comfort"</span>, color=<span class="st">"#10b981"</span>, opacity=<span class="nm">0.12</span>)</pre></div></div>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dgr"></div></div></div><pre>fig.<span class="fn">band</span>(y_lo=<span class="nm">18</span>, y_hi=<span class="nm">24</span>, label=<span class="st">"Comfort"</span>, color=<span class="st">"#10b981"</span>, opacity=<span class="nm">0.12</span>)</pre></div></div>
 
 <div class="de" id="dv"><h2>vline() / hline()</h2>
-<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">vline</span>(x=ts_ms[idx], label=<span class="st">"Event"</span>, color=<span class="st">"#dc2626"</span>)
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dgr"></div></div></div><pre>fig.<span class="fn">vline</span>(x=ts_ms[idx], label=<span class="st">"Event"</span>, color=<span class="st">"#dc2626"</span>)
 fig.<span class="fn">hline</span>(y=<span class="nm">100</span>, label=<span class="st">"Max"</span>, color=<span class="st">"#f97316"</span>, dash=<span class="kw">True</span>)</pre></div>
 <p>For timeseries <code>vline</code>, pass x in unix milliseconds.</p></div>
 
 <div class="de" id="dr"><h2>region()</h2>
-<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">region</span>(x_start=ts_ms[<span class="nm">0</span>], x_end=ts_ms[<span class="nm">3600</span>],
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dgr"></div></div></div><pre>fig.<span class="fn">region</span>(x_start=ts_ms[<span class="nm">0</span>], x_end=ts_ms[<span class="nm">3600</span>],
          label=<span class="st">"Night"</span>, color=<span class="st">"indigo"</span>, opacity=<span class="nm">0.06</span>)</pre></div></div>
 
 <div class="de" id="dt"><h2>tag()</h2>
-<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">tag</span>(x_start=ts_ms[a], x_end=ts_ms[b],
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dgr"></div></div></div><pre>fig.<span class="fn">tag</span>(x_start=ts_ms[a], x_end=ts_ms[b],
       label=<span class="st">"Fault"</span>, color=<span class="st">"#f43f5e"</span>, removable=<span class="kw">True</span>)</pre></div></div>
 
 <div class="de" id="dp"><h2>pin()</h2>
-<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">pin</span>(x=ts_ms[idx], label=<span class="st">"Peak"</span>, y_frac=<span class="nm">0.1</span>, color=<span class="st">""</span>)</pre></div>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dgr"></div></div></div><pre>fig.<span class="fn">pin</span>(x=ts_ms[idx], label=<span class="st">"Peak"</span>, y_frac=<span class="nm">0.1</span>, color=<span class="st">""</span>)</pre></div>
 <table class="pt"><tr><th>Param</th><th>Type</th><th>Description</th></tr>
 <tr><td>x</td><td>float</td><td>X position. Unix ms for timeseries.</td></tr>
 <tr><td>label</td><td>str</td><td>Text on popup and sticky note.</td></tr>
@@ -422,15 +396,15 @@ fig.<span class="fn">hline</span>(y=<span class="nm">100</span>, label=<span cla
 </table></div>
 
 <div class="de" id="do"><h2>save() / show() / to_html()</h2>
-<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">save</span>(<span class="st">"out.html"</span>)      <span class="cm"># write to disk</span>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dgr"></div></div></div><pre>fig.<span class="fn">save</span>(<span class="st">"out.html"</span>)      <span class="cm"># write to disk</span>
 fig.<span class="fn">show</span>()                <span class="cm"># open in browser</span>
 html = fig.<span class="fn">to_html</span>()    <span class="cm"># return string</span>
 frag = fig.<span class="fn">to_fragment</span>() <span class="cm"># no &lt;head&gt;/&lt;body&gt;</span></pre></div></div>
 
 <div class="de" id="dco"><h2>combine()</h2>
-<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>dash = fig1 + fig2 + fig3
-dash = fp.<span class="fn">combine</span>(fig1, fig2, title=<span class="st">"Dashboard"</span>)
-dash = fp.<span class="cl">Dashboard</span>().<span class="fn">add</span>(fig1).<span class="fn">add</span>(fig2)
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dgr"></div></div></div><pre>dash = fig1 + fig2 + fig3
+dash = yp.<span class="fn">combine</span>(fig1, fig2, title=<span class="st">"Dashboard"</span>)
+dash = yp.<span class="cl">Dashboard</span>().<span class="fn">add</span>(fig1).<span class="fn">add</span>(fig2)
 dash.<span class="fn">save</span>(<span class="st">"out.html"</span>)</pre></div></div>
 
 <div class="de" id="dd"><h2>Dashboard</h2>
@@ -455,8 +429,8 @@ dash.<span class="fn">save</span>(<span class="st">"out.html"</span>)</pre></div
 </ul></div>
 
 <div class="de" id="dth"><h2>Themes</h2>
-<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fp.<span class="cl">Figure</span>(theme=<span class="st">"light"</span>)  <span class="cm"># default</span>
-fp.<span class="cl">Figure</span>(theme=<span class="st">"dark"</span>)</pre></div></div>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dgr"></div></div></div><pre>yp.<span class="cl">Figure</span>(theme=<span class="st">"light"</span>)  <span class="cm"># default</span>
+yp.<span class="cl">Figure</span>(theme=<span class="st">"dark"</span>)</pre></div></div>
 
     </div>
   </div>
