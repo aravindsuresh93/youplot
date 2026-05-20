@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>youplot — Fast Timeseries Charts for Python</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500&family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--bg2:#f8f8f7;--border:#e8e7e3;--mid:#888580;--body:#2a2925;--head:#111009;--accent:#2563eb;--green:#16a34a;--red:#dc2626;--mono:"DM Mono",monospace;--serif:"Lora",Georgia,serif;--sans:"DM Sans",-apple-system,sans-serif;--r:6px;--max:900px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--body);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 32px}
+hr{border:none;border-top:1px solid var(--border)}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+.nav-i{max-width:var(--max);margin:0 auto;padding:0 32px;height:52px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--head)}
+.logo em{font-style:normal;color:var(--accent)}
+.nl{display:flex;gap:28px}
+.nl a{font-size:13.5px;font-weight:500;color:var(--mid);transition:color .12s}
+.nl a:hover{color:var(--head);text-decoration:none}
+.hero{padding:80px 32px 72px;max-width:var(--max);margin:0 auto;border-bottom:1px solid var(--border)}
+.hero h1{font-family:var(--serif);font-size:clamp(36px,5vw,56px);font-weight:400;line-height:1.15;letter-spacing:-.02em;color:var(--head);margin-bottom:20px}
+.hero h1 em{font-style:italic;color:var(--accent)}
+.hero-sub{font-size:16.5px;line-height:1.7;color:#555250;max-width:580px;margin-bottom:32px}
+.install{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--border);background:var(--bg2);border-radius:var(--r);padding:10px 18px;font-family:var(--mono);font-size:13.5px;cursor:pointer;user-select:all;transition:border-color .15s;color:var(--head)}
+.install:hover{border-color:var(--accent)}
+.dollar{color:var(--mid)}
+.hero-note{margin-top:10px;font-size:12.5px;color:var(--mid)}
+.hero-links{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.hl{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:500;color:var(--mid);border:1px solid var(--border);border-radius:var(--r);padding:7px 14px;transition:border-color .15s,color .15s}
+.hl:hover{color:var(--head);border-color:#bbb;text-decoration:none}
+.hero-meta{display:flex;gap:36px;margin-top:48px;flex-wrap:wrap}
+.mv{font-family:var(--mono);font-size:22px;font-weight:500;color:var(--head);line-height:1}
+.ml{font-size:12px;color:var(--mid);margin-top:3px}
+.sec{padding:64px 32px;max-width:var(--max);margin:0 auto;border-bottom:1px solid var(--border)}
+.lbl{font-family:var(--mono);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.12em;color:var(--mid);margin-bottom:14px}
+.sec h2{font-family:var(--serif);font-size:clamp(26px,3.5vw,38px);font-weight:400;line-height:1.2;letter-spacing:-.018em;color:var(--head);margin-bottom:16px}
+.sb{font-size:15px;color:#555250;max-width:640px;line-height:1.75;margin-bottom:40px}
+.code{background:#18181b;border-radius:var(--r);overflow:hidden;margin:20px 0}
+.cb{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03)}
+.dots{display:flex;gap:5px}
+.d{width:9px;height:9px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#ffbd2e}.dg{background:#28c840}
+.ct{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.25)}
+.code pre{padding:20px 22px;font-family:var(--mono);font-size:13px;line-height:1.8;color:#e4e4e7;overflow-x:auto;white-space:pre}
+.kw{color:#a78bfa}.fn{color:#93c5fd}.st{color:#6ee7b7}.cm{color:#71717a;font-style:italic}.nm{color:#fbbf24}.cl{color:#f9a8d4}
+code{font-family:var(--mono);font-size:.86em;background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;color:var(--accent)}
+.bw{overflow-x:auto;margin:32px 0 16px}
+table.bt{width:100%;border-collapse:collapse;font-size:14px}
+table.bt th{text-align:right;font-weight:600;font-size:11.5px;letter-spacing:-.01em;color:var(--mid);padding:8px 16px;border-bottom:2px solid var(--border);font-family:var(--mono)}
+table.bt th:first-child{text-align:left}
+table.bt td{padding:12px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:13px;text-align:right}
+table.bt td:first-child{text-align:left;font-weight:500;font-family:var(--sans);color:var(--head)}
+table.bt tr:hover td{background:var(--bg2)}
+table.bt tr:last-child td{border-bottom:none}
+.best{color:var(--green);font-weight:600}.slow{color:var(--mid)}
+.bn{font-size:12.5px;color:var(--mid);line-height:1.6;border-left:2px solid var(--border);padding-left:14px;margin-top:16px}
+.bn strong{color:var(--body);font-weight:600}
+.bch{display:flex;flex-direction:column;gap:10px;margin:28px 0}
+.br{display:flex;align-items:center;gap:14px}
+.bl{font-size:13px;font-weight:500;color:var(--head);width:100px;flex-shrink:0}
+.bt2{flex:1;height:8px;background:var(--bg2);border-radius:4px;overflow:hidden}
+.bf{height:100%;border-radius:4px;width:0;transition:width 1.1s cubic-bezier(.16,1,.3,1)}
+.bv{font-family:var(--mono);font-size:12.5px;color:var(--mid);width:64px;text-align:right;flex-shrink:0}
+/* Feature tabs */
+.ftabs{display:flex;gap:0;border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.ftab{flex:1;padding:12px 10px;font-size:13px;font-weight:500;color:var(--mid);cursor:pointer;background:var(--bg2);border-right:1px solid var(--border);text-align:center;transition:background .12s,color .12s;user-select:none}
+.ftab:last-child{border-right:none}
+.ftab.active{background:var(--bg);color:var(--head)}
+.ftab:hover:not(.active){background:var(--bg)}
+.fdw{border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r);overflow:hidden}
+.fd{display:none}
+.fd.active{display:block}
+.fdc{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.fdi{padding:28px;border-right:1px solid var(--border)}
+.fdi h3{font-size:16px;font-weight:600;color:var(--head);margin-bottom:8px}
+.fdi p{font-size:13.5px;color:#555250;line-height:1.7;margin-bottom:12px}
+.fdi ul{padding-left:16px}
+.fdi li{font-size:13.5px;color:#555250;line-height:1.7;margin-bottom:4px}
+.fcode{background:#18181b;padding:20px 22px;font-family:var(--mono);font-size:12.5px;line-height:1.8;color:#e4e4e7;overflow-x:auto;white-space:pre}
+/* Cases */
+.cl{display:flex;flex-direction:column}
+.ci{display:grid;grid-template-columns:160px 1fr;gap:32px;padding:28px 0;border-bottom:1px solid var(--border);align-items:start}
+.ci:first-child{border-top:1px solid var(--border)}
+.ct2{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);padding-top:3px}
+.ci h3{font-size:15px;font-weight:600;color:var(--head);margin-bottom:6px}
+.ci p{font-size:14px;color:#555250;line-height:1.7}
+.thnk{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:32px 36px}
+.thnk p{font-size:14.5px;color:#555250;line-height:1.75;margin-bottom:12px}
+.thnk p:last-child{margin-bottom:0}
+/* Docs */
+.dg{display:grid;grid-template-columns:180px 1fr;gap:48px;align-items:start}
+.dsb{position:sticky;top:68px}
+.sg{margin-bottom:24px}
+.sg-t{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin-bottom:8px}
+.sl{display:block;font-size:13.5px;color:var(--mid);padding:3px 0;transition:color .12s}
+.sl:hover,.sl.active{color:var(--accent);text-decoration:none}
+.da{min-width:0}
+.de{margin-bottom:60px;scroll-margin-top:72px}
+.de h2{font-family:var(--serif);font-size:26px;font-weight:400;letter-spacing:-.015em;color:var(--head);padding-bottom:14px;border-bottom:1px solid var(--border);margin-bottom:18px}
+.de h3{font-size:15px;font-weight:600;color:var(--head);margin:24px 0 8px}
+.de p{font-size:14.5px;line-height:1.75;color:#444;margin-bottom:12px}
+.de ul{padding-left:18px;margin-bottom:14px}
+.de li{font-size:14.5px;line-height:1.75;color:#444;margin-bottom:4px}
+.pt{width:100%;border-collapse:collapse;margin:16px 0}
+.pt th{text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);padding:7px 10px;border-bottom:2px solid var(--border)}
+.pt td{padding:9px 10px;border-bottom:1px solid var(--bg2);font-size:13.5px;vertical-align:top}
+.pt td:first-child{font-family:var(--mono);font-size:12.5px;color:var(--accent);white-space:nowrap}
+.pt td:nth-child(2){font-family:var(--mono);font-size:12px;color:var(--mid)}
+.pt td:last-child{color:#555;line-height:1.6}
+.pt tr:last-child td{border-bottom:none}
+footer{border-top:1px solid var(--border);padding:32px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--mid);flex-wrap:wrap;gap:12px}
+footer a{color:var(--mid)}
+footer a:hover{color:var(--head);text-decoration:none}
+.fl{font-family:var(--mono);font-size:13px;color:var(--head)}
+.fl em{font-style:normal;color:var(--accent)}
+@media(max-width:720px){.fdc{grid-template-columns:1fr}.fdi{border-right:none;border-bottom:1px solid var(--border)}.dg{grid-template-columns:1fr}.dsb{display:none}.ci{grid-template-columns:1fr;gap:6px}.ftabs{flex-wrap:wrap}.ftab{flex:none;width:50%}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-i">
+    <span class="logo">flash<em>plot</em></span>
+    <div class="nl">
+      <a href="#benchmark">Benchmark</a>
+      <a href="#features">Features</a>
+      <a href="#docs">Docs</a>
+      <a href="https://github.com/leeoniya/uPlot" target="_blank">uPlot &#8599;</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <p class="lbl">Python &middot; Timeseries &middot; HTML</p>
+  <h1>Extremely fast,<br><em>lightweight</em> charts.</h1>
+  <p class="hero-sub">youplot wraps <a href="https://github.com/leeoniya/uPlot">uPlot</a> &mdash; a JavaScript chart library built for extraordinary rendering speed. Write Python, get a fully self-contained interactive HTML file. No server. No viewer dependencies.</p>
+  <div class="install" onclick="navigator.clipboard&&navigator.clipboard.writeText('pip install youplot');this.style.borderColor='var(--green)';var t=this;setTimeout(function(){t.style.borderColor=''},1200)">
+    <span class="dollar">$</span> pip install youplot
+  </div>
+  <p class="hero-note">Python 3.10+ &middot; No runtime dependencies &middot; MIT License &middot; 50 KB bundled JS</p>
+  <div class="hero-links">
+    <a class="hl" href="https://github.com/YOUR_USERNAME/youplot" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      GitHub
+    </a>
+    <a class="hl" href="https://pypi.org/project/youplot" target="_blank">PyPI</a>
+    <a class="hl" href="#docs">Docs &rarr;</a>
+  </div>
+  <div class="hero-meta">
+    <div><div class="mv">3.8&ndash;4.6&times;</div><div class="ml">faster than Plotly/Bokeh at 500K pts</div></div>
+    <div><div class="mv">50 KB</div><div class="ml">bundled JS runtime (Plotly = 3.5 MB)</div></div>
+    <div><div class="mv">0</div><div class="ml">server required to view charts</div></div>
+  </div>
+</div>
+
+<div class="sec" id="benchmark">
+  <p class="lbl">Benchmark &mdash; Apple M2 Pro &middot; Python 3.11 &middot; 3 series &middot; median of 3 runs</p>
+  <h2>Real numbers.</h2>
+  <p class="sb">Time to generate a chart from Python. End-to-end including serialization and file write. Run <code>python benchmark.py</code> to reproduce on your machine.</p>
+  <p style="font-size:13px;color:var(--mid);margin-bottom:16px;font-family:var(--mono)">100,000 points &middot; 3 series &middot; generation time</p>
+  <div class="bch">
+    <div class="br"><div class="bl">youplot</div><div class="bt2"><div class="bf" style="background:var(--accent)" data-w="21"></div></div><div class="bv best">176ms</div></div>
+    <div class="br"><div class="bl">Matplotlib</div><div class="bt2"><div class="bf" style="background:#d4d4d4" data-w="42"></div></div><div class="bv slow">355ms &dagger;</div></div>
+    <div class="br"><div class="bl">Plotly</div><div class="bt2"><div class="bf" style="background:#d4d4d4" data-w="80"></div></div><div class="bv slow">676ms</div></div>
+    <div class="br"><div class="bl">Bokeh</div><div class="bt2"><div class="bf" style="background:#d4d4d4" data-w="100"></div></div><div class="bv slow">835ms</div></div>
+  </div>
+  <p style="font-size:12px;color:var(--mid);margin-bottom:28px">&dagger; Matplotlib produces a static PNG. youplot, Plotly and Bokeh produce interactive HTML.</p>
+  <div class="bw">
+    <table class="bt">
+      <thead><tr><th>Library</th><th>1K pts</th><th>10K pts</th><th>100K pts</th><th>500K pts</th><th>Output size (500K)</th><th>Output</th></tr></thead>
+      <tbody>
+        <tr><td>youplot</td><td class="best">2ms</td><td class="best">18ms</td><td class="best">176ms</td><td class="best">892ms</td><td class="best">20 MB</td><td>Interactive HTML</td></tr>
+        <tr><td>Plotly</td><td class="slow">16ms</td><td class="slow">81ms</td><td class="slow">676ms</td><td class="slow">3.36s</td><td class="slow">46 MB</td><td>Interactive HTML</td></tr>
+        <tr><td>Bokeh</td><td class="slow">27ms</td><td class="slow">100ms</td><td class="slow">835ms</td><td class="slow">4.14s</td><td class="slow">50 MB</td><td>Interactive HTML</td></tr>
+        <tr><td>Matplotlib</td><td class="slow">95ms</td><td class="slow">125ms</td><td class="slow">355ms</td><td class="slow">926ms</td><td>121 KB</td><td>Static PNG &dagger;</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="bn"><strong>What is timed:</strong> Python-side only &mdash; data serialization + file write. Browser render time is separate (uPlot renders 1M points in &lt;35ms). Plotly JS bundle = 3.5 MB; youplot bundles uPlot at 50 KB. Matplotlib output is small because it is a raster PNG with no interactivity.</div>
+</div>
+
+<div class="sec" id="features">
+  <p class="lbl">Features</p>
+  <h2>What&rsquo;s included.</h2>
+  <p class="sb" style="margin-bottom:24px">All features work in the same self-contained HTML file.</p>
+  <div class="ftabs">
+    <div class="ftab active" onclick="showF('zoom',this)">Zoom &amp; Pan</div>
+    <div class="ftab" onclick="showF('sync',this)">Crosshair Sync</div>
+    <div class="ftab" onclick="showF('tags',this)">Region Tags</div>
+    <div class="ftab" onclick="showF('pins',this)">Annotations</div>
+    <div class="ftab" onclick="showF('measure',this)">Measure</div>
+    <div class="ftab" onclick="showF('bands',this)">Bands</div>
+  </div>
+  <div class="fdw">
+    <div class="fd active" id="fd-zoom"><div class="fdc">
+      <div class="fdi"><h3>Zoom &amp; Pan</h3><p>The Zoom tool is default. Just set <code>zoom=True</code>.</p><ul><li><strong>Left-drag horizontally</strong> &rarr; zoom X to selection</li><li><strong>Left-drag vertically</strong> &rarr; zoom Y axis</li><li><strong>Double-click</strong> &rarr; reset to full range</li><li>60fps regardless of dataset size</li></ul></div>
+      <div class="fcode"><span class="kw">import</span> youplot <span class="kw">as</span> fp
+
+fig = fp.<span class="cl">Figure</span>(
+    title = <span class="st">"Engine Temperature"</span>,
+    zoom  = <span class="kw">True</span>,  <span class="cm"># enables toolbar</span>
+)
+fig.<span class="fn">line</span>(ts_ms, temp, label=<span class="st">"&#176;C"</span>)
+fig.<span class="fn">save</span>(<span class="st">"chart.html"</span>)</div>
+    </div></div>
+    <div class="fd" id="fd-sync"><div class="fdc">
+      <div class="fdi"><h3>Crosshair Sync</h3><p>All charts on a page share a cursor automatically. Each shows its own tooltip.</p><ul><li>No configuration &mdash; just combine figures</li><li>Each chart tooltip shows its own series independently</li><li>Works across any number of charts</li></ul></div>
+      <div class="fcode">fig1 = fp.<span class="cl">Figure</span>(title=<span class="st">"Temperature"</span>, zoom=<span class="kw">True</span>)
+fig1.<span class="fn">line</span>(ts_ms, temp, label=<span class="st">"&#176;C"</span>)
+
+fig2 = fp.<span class="cl">Figure</span>(title=<span class="st">"Humidity"</span>, zoom=<span class="kw">True</span>)
+fig2.<span class="fn">line</span>(ts_ms, hum, label=<span class="st">"%"</span>)
+
+<span class="cm"># Crosshair sync is automatic</span>
+dash = fig1 + fig2
+dash.<span class="fn">save</span>(<span class="st">"dashboard.html"</span>)</div>
+    </div></div>
+    <div class="fd" id="fd-tags"><div class="fdc">
+      <div class="fdi"><h3>Region Tags</h3><p>Named time windows defined in Python or drawn interactively. Appears as header band + clickable bubble. Click bubble to navigate.</p><ul><li><code>removable=False</code> pins permanently</li><li>Or draw with the Tag tool in browser</li></ul></div>
+      <div class="fcode">fig.<span class="fn">tag</span>(
+    x_start   = ts_ms[fault_start],
+    x_end     = ts_ms[fault_end],
+    label     = <span class="st">"Fault window"</span>,
+    color     = <span class="st">"#f43f5e"</span>,
+    removable = <span class="kw">True</span>,
+)
+fig.<span class="fn">tag</span>(
+    x_start   = ts_ms[<span class="nm">0</span>],
+    x_end     = ts_ms[<span class="nm">3600</span>],
+    label     = <span class="st">"Night"</span>,
+    removable = <span class="kw">False</span>,  <span class="cm"># pinned</span>
+)</div>
+    </div></div>
+    <div class="fd" id="fd-pins"><div class="fdc">
+      <div class="fdi"><h3>Annotation Pins</h3><p>Drop sticky notes at any x position. Defined in Python or placed interactively. Hidden when outside the zoom window. Appear as sticky notes in the panel below.</p><ul><li><code>y_frac</code>: 0=top, 1=bottom</li><li><code>color=""</code> &rarr; auto-cycle palette</li><li>Survive HTML export</li></ul></div>
+      <div class="fcode">fig.<span class="fn">pin</span>(
+    x      = ts_ms[peak_idx],
+    label  = <span class="st">"Peak: 127&#176;C"</span>,
+    y_frac = <span class="nm">0.1</span>,    <span class="cm"># near top</span>
+    color  = <span class="st">"#f43f5e"</span>,
+)
+fig.<span class="fn">pin</span>(
+    x      = ts_ms[event_idx],
+    label  = <span class="st">"System restart"</span>,
+    y_frac = <span class="nm">0.5</span>,
+    color  = <span class="st">""</span>,         <span class="cm"># auto palette</span>
+)</div>
+    </div></div>
+    <div class="fd" id="fd-measure"><div class="fdc">
+      <div class="fdi"><h3>Measure Tool</h3><p>Click an anchor point. As you move the cursor, a live &#916;X and per-series &#916;Y bar appears below the chart.</p><ul><li>All visible series show value difference simultaneously</li><li>Saved measurements persist in the chart</li><li>Hover saved measurement + click &times; to remove</li></ul></div>
+      <div class="fcode"><span class="cm"># Measure tool is UI-only.</span>
+<span class="cm"># Just enable zoom=True.</span>
+
+fig = fp.<span class="cl">Figure</span>(
+    title = <span class="st">"Signal Analysis"</span>,
+    zoom  = <span class="kw">True</span>,
+)
+fig.<span class="fn">line</span>(ts_ms, signal_a, label=<span class="st">"Ch A"</span>)
+fig.<span class="fn">line</span>(ts_ms, signal_b, label=<span class="st">"Ch B"</span>)
+fig.<span class="fn">save</span>(<span class="st">"analysis.html"</span>)
+<span class="cm"># In browser: Measure tool &#8594; click anchor</span></div>
+    </div></div>
+    <div class="fd" id="fd-bands"><div class="fdc">
+      <div class="fdi"><h3>Threshold Bands</h3><p>Shade horizontal regions for normal ranges, SLA limits, or alert thresholds. Labelled, colour-coded, dashed border lines.</p></div>
+      <div class="fcode">fig.<span class="fn">band</span>(
+    y_lo    = <span class="nm">18</span>,
+    y_hi    = <span class="nm">24</span>,
+    label   = <span class="st">"Comfort zone"</span>,
+    color   = <span class="st">"#10b981"</span>,
+    opacity = <span class="nm">0.10</span>,
+)
+fig.<span class="fn">hline</span>(
+    y     = <span class="nm">24</span>,
+    label = <span class="st">"Upper limit"</span>,
+    color = <span class="st">"#f97316"</span>,
+    dash  = <span class="kw">True</span>,
+)</div>
+    </div></div>
+  </div>
+</div>
+
+<div class="sec" id="quickstart">
+  <p class="lbl">Quickstart</p>
+  <h2>Python in. HTML out.</h2>
+  <div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><span class="ct">quickstart.py</span></div><pre><span class="kw">import</span> youplot <span class="kw">as</span> fp
+
+ts_ms = [<span class="nm">1_700_000_000_000</span> + i * <span class="nm">1000</span> <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">86_400</span>)]  <span class="cm"># unix ms</span>
+
+fig = fp.<span class="cl">Figure</span>(title=<span class="st">"24h Temperature"</span>, zoom=<span class="kw">True</span>, legend=<span class="kw">True</span>)
+fig.<span class="fn">line</span>(ts_ms, temp, label=<span class="st">"&#176;C"</span>, color=<span class="st">"#f97316"</span>, fill=<span class="kw">True</span>)
+fig.<span class="fn">band</span>(y_lo=<span class="nm">18</span>, y_hi=<span class="nm">24</span>, label=<span class="st">"Comfort"</span>, color=<span class="st">"#10b981"</span>)
+fig.<span class="fn">vline</span>(x=ts_ms[<span class="nm">3600</span>], label=<span class="st">"Event"</span>, color=<span class="st">"#dc2626"</span>)
+fig.<span class="fn">save</span>(<span class="st">"temperature.html"</span>)   <span class="cm"># open in any browser</span></pre></div>
+  <div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div><span class="ct">dashboard.py &mdash; synced multi-chart</span></div><pre>fig1 = fp.<span class="cl">Figure</span>(title=<span class="st">"Engine"</span>, height=<span class="nm">380</span>, zoom=<span class="kw">True</span>)
+fig1.<span class="fn">line</span>(ts_ms, coolant, label=<span class="st">"Coolant &#176;C"</span>, color=<span class="st">"#ef4444"</span>)
+fig1.<span class="fn">line</span>(ts_ms, oil,     label=<span class="st">"Oil &#176;C"</span>,     color=<span class="st">"#f97316"</span>, dash=<span class="kw">True</span>)
+fig1.<span class="fn">tag</span>(x_start=fault_start, x_end=fault_end, label=<span class="st">"Fault"</span>)
+fig1.<span class="fn">pin</span>(ts_ms[peak_idx], label=<span class="st">"Peak: 127&#176;C"</span>, y_frac=<span class="nm">0.1</span>)
+
+fig2 = fp.<span class="cl">Figure</span>(title=<span class="st">"RPM &amp; Fuel"</span>, height=<span class="nm">280</span>, zoom=<span class="kw">True</span>)
+fig2.<span class="fn">line</span>(ts_ms, rpm,  label=<span class="st">"RPM"</span>,      color=<span class="st">"#6366f1"</span>)
+fig2.<span class="fn">line</span>(ts_ms, fuel, label=<span class="st">"Fuel PSI"</span>, color=<span class="st">"#16a34a"</span>)
+
+dash = fig1 + fig2  <span class="cm"># or fp.combine(fig1, fig2)</span>
+dash.<span class="fn">save</span>(<span class="st">"engine.html"</span>)</pre></div>
+</div>
+
+<div class="sec" id="usecases">
+  <p class="lbl">Use cases</p><h2>Who uses it.</h2>
+  <div class="cl">
+    <div class="ci"><div class="ct2">IoT / Sensors</div><div><h3>Device Telemetry</h3><p>Millions of sensor readings &mdash; temperature, voltage, vibration &mdash; from embedded systems or vehicles. Share fault analysis as a single HTML file, no backend.</p></div></div>
+    <div class="ci"><div class="ct2">Observability</div><div><h3>Infrastructure Metrics</h3><p>CPU, memory, latency, error rates in a self-contained file for incident post-mortems. No Grafana setup required.</p></div></div>
+    <div class="ci"><div class="ct2">Finance</div><div><h3>Market &amp; Strategy Data</h3><p>OHLCV lines, strategy signals, drawdown curves. Fast zoom over years of tick data. Tag regime changes, annotate signals.</p></div></div>
+    <div class="ci"><div class="ct2">Science</div><div><h3>Experimental Data</h3><p>Multi-channel recordings, climate model output, lab instrument data. HTML embeds in Jupyter &mdash; reviewers interact with actual data.</p></div></div>
+    <div class="ci"><div class="ct2">ML / AI</div><div><h3>Training Runs</h3><p>Loss curves, schedules, validation metrics. Pin convergence events, tag overfitting windows, compare runs with crosshair sync.</p></div></div>
+  </div>
+</div>
+
+<div class="sec" id="uplot">
+  <p class="lbl">Acknowledgement</p><h2>Built on uPlot.</h2>
+  <div class="thnk">
+    <p>youplot is a Python API layer over <a href="https://github.com/leeoniya/uPlot" target="_blank">uPlot</a>, written by <strong>Leon Sorokin</strong>. uPlot renders one million data points in under 35ms, ships at 50 KB with zero dependencies, and handles timeseries precision most libraries skip.</p>
+    <p>youplot exists because uPlot exists. All rendering performance comes from Leon&#8217;s work. Please <a href="https://github.com/leeoniya/uPlot" target="_blank">&#9733; star the repository</a> and support the project. uPlot is MIT licensed.</p>
+  </div>
+</div>
+
+<div class="sec" id="docs" style="border-bottom:none">
+  <p class="lbl">Documentation</p>
+  <h2 style="margin-bottom:48px">API Reference</h2>
+  <div class="dg">
+    <div class="dsb">
+      <div class="sg"><div class="sg-t">Getting Started</div><a class="sl" href="#di">Installation</a><a class="sl" href="#dc">Concepts</a></div>
+      <div class="sg"><div class="sg-t">Figure</div><a class="sl" href="#df">Figure()</a><a class="sl" href="#dl">line()</a><a class="sl" href="#dsc">scatter()</a><a class="sl" href="#db">band()</a><a class="sl" href="#dv">vline() / hline()</a><a class="sl" href="#dr">region()</a><a class="sl" href="#dt">tag()</a><a class="sl" href="#dp">pin()</a><a class="sl" href="#do">save() / show()</a></div>
+      <div class="sg"><div class="sg-t">Dashboard</div><a class="sl" href="#dco">combine()</a><a class="sl" href="#dd">Dashboard</a></div>
+      <div class="sg"><div class="sg-t">UI Tools</div><a class="sl" href="#duz">Zoom &amp; Pan</a><a class="sl" href="#dut">Tags</a><a class="sl" href="#dua">Annotations</a><a class="sl" href="#dum">Measure</a><a class="sl" href="#due">Export</a></div>
+      <div class="sg"><div class="sg-t">Reference</div><a class="sl" href="#dclr">Colors</a><a class="sl" href="#dth">Themes</a></div>
+    </div>
+    <div class="da">
+
+<div class="de" id="di"><h2>Installation</h2><p>Requires Python 3.10+. No runtime dependencies.</p>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre><span style="color:#71717a">$ </span>pip install youplot</pre></div>
+<p>The uPlot JS runtime (50 KB) is bundled. Generated HTML files work offline and open from <code>file://</code>.</p></div>
+
+<div class="de" id="dc"><h2>Concepts</h2>
+<ul><li>A <strong>Figure</strong> is one chart &mdash; series, annotations, axes.</li><li>A <strong>Dashboard</strong> groups figures into one HTML page with shared crosshair sync.</li><li>Everything renders to a <strong>self-contained HTML string or file</strong>. No server required to view.</li><li>X data is a list of numbers. For timeseries use <strong>Unix milliseconds</strong>: <code>int(time.time()) * 1000</code>.</li></ul>
+<p>Timeseries auto-detected when x values exceed <code>1e11</code>. Axis labels and tooltips format automatically.</p></div>
+
+<div class="de" id="df"><h2>Figure()</h2>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig = fp.<span class="cl">Figure</span>(
+  title    = <span class="st">"My Chart"</span>,
+  subtitle = <span class="st">"Optional"</span>,
+  theme    = <span class="st">"light"</span>,    <span class="cm"># "light" | "dark"</span>
+  height   = <span class="nm">400</span>,
+  width    = <span class="kw">None</span>,        <span class="cm"># None = 100% container</span>
+  y_label  = <span class="st">"Signal"</span>,
+  zoom     = <span class="kw">True</span>,
+  legend   = <span class="kw">True</span>,
+)</pre></div>
+<p>All methods return <code>self</code> for chaining.</p>
+<table class="pt"><tr><th>Param</th><th>Default</th><th>Description</th></tr>
+<tr><td>title</td><td>""</td><td>Chart title.</td></tr>
+<tr><td>subtitle</td><td>""</td><td>Subtitle.</td></tr>
+<tr><td>theme</td><td>"light"</td><td><code>"light"</code> or <code>"dark"</code>.</td></tr>
+<tr><td>height</td><td>400</td><td>Height in pixels.</td></tr>
+<tr><td>width</td><td>None</td><td>Width in pixels. <code>None</code> = fill container.</td></tr>
+<tr><td>y_label</td><td>""</td><td>Left Y-axis label.</td></tr>
+<tr><td>zoom</td><td>False</td><td>Enable toolbar: zoom, tag, measure, annotate, export.</td></tr>
+<tr><td>legend</td><td>False</td><td>Show series legend. Click to toggle, double-click to isolate.</td></tr>
+</table></div>
+
+<div class="de" id="dl"><h2>line()</h2>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">line</span>(
+  x, y,               <span class="cm"># required: lists of numbers</span>
+  label        = <span class="st">""</span>,
+  color        = <span class="kw">None</span>,  <span class="cm"># hex, named, or auto</span>
+  width        = <span class="nm">2.0</span>,
+  dash         = <span class="kw">False</span>,  <span class="cm"># True or [on_px, off_px]</span>
+  fill         = <span class="kw">False</span>,  <span class="cm"># gradient fill under line</span>
+  fill_opacity = <span class="nm">0.15</span>,
+  points       = <span class="kw">False</span>,
+  points_size  = <span class="nm">4.0</span>,
+  step         = <span class="kw">False</span>,  <span class="cm"># staircase rendering</span>
+  gap_threshold= <span class="kw">None</span>,
+  hover_unit   = <span class="st">""</span>,    <span class="cm"># e.g. " &#176;C"</span>
+  hover_format = <span class="st">""</span>,    <span class="cm"># e.g. ".2f"</span>
+)</pre></div></div>
+
+<div class="de" id="dsc"><h2>scatter()</h2>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">scatter</span>(x, y, label=<span class="st">""</span>, color=<span class="kw">None</span>,
+  size=<span class="nm">6.0</span>, size_by=<span class="kw">None</span>, size_range=[<span class="nm">3.0</span>,<span class="nm">18.0</span>],
+  color_by=<span class="kw">None</span>, shape=<span class="st">"circle"</span>, trendline=<span class="kw">False</span>,
+  jitter_x=<span class="nm">0.0</span>, jitter_y=<span class="nm">0.0</span>)</pre></div></div>
+
+<div class="de" id="db"><h2>band()</h2>
+<p>Horizontal shaded band for normal ranges, SLA limits, alert zones.</p>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">band</span>(y_lo=<span class="nm">18</span>, y_hi=<span class="nm">24</span>, label=<span class="st">"Comfort"</span>, color=<span class="st">"#10b981"</span>, opacity=<span class="nm">0.12</span>)</pre></div></div>
+
+<div class="de" id="dv"><h2>vline() / hline()</h2>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">vline</span>(x=ts_ms[idx], label=<span class="st">"Event"</span>, color=<span class="st">"#dc2626"</span>)
+fig.<span class="fn">hline</span>(y=<span class="nm">100</span>, label=<span class="st">"Max"</span>, color=<span class="st">"#f97316"</span>, dash=<span class="kw">True</span>)</pre></div>
+<p>For timeseries <code>vline</code>, pass x in unix milliseconds.</p></div>
+
+<div class="de" id="dr"><h2>region()</h2>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">region</span>(x_start=ts_ms[<span class="nm">0</span>], x_end=ts_ms[<span class="nm">3600</span>],
+         label=<span class="st">"Night"</span>, color=<span class="st">"indigo"</span>, opacity=<span class="nm">0.06</span>)</pre></div></div>
+
+<div class="de" id="dt"><h2>tag()</h2>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">tag</span>(x_start=ts_ms[a], x_end=ts_ms[b],
+      label=<span class="st">"Fault"</span>, color=<span class="st">"#f43f5e"</span>, removable=<span class="kw">True</span>)</pre></div></div>
+
+<div class="de" id="dp"><h2>pin()</h2>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">pin</span>(x=ts_ms[idx], label=<span class="st">"Peak"</span>, y_frac=<span class="nm">0.1</span>, color=<span class="st">""</span>)</pre></div>
+<table class="pt"><tr><th>Param</th><th>Type</th><th>Description</th></tr>
+<tr><td>x</td><td>float</td><td>X position. Unix ms for timeseries.</td></tr>
+<tr><td>label</td><td>str</td><td>Text on popup and sticky note.</td></tr>
+<tr><td>y_frac</td><td>float</td><td>Vertical position. 0=top, 1=bottom. Default 0.2.</td></tr>
+<tr><td>color</td><td>str</td><td>Colour. Empty = auto-cycle palette.</td></tr>
+</table></div>
+
+<div class="de" id="do"><h2>save() / show() / to_html()</h2>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fig.<span class="fn">save</span>(<span class="st">"out.html"</span>)      <span class="cm"># write to disk</span>
+fig.<span class="fn">show</span>()                <span class="cm"># open in browser</span>
+html = fig.<span class="fn">to_html</span>()    <span class="cm"># return string</span>
+frag = fig.<span class="fn">to_fragment</span>() <span class="cm"># no &lt;head&gt;/&lt;body&gt;</span></pre></div></div>
+
+<div class="de" id="dco"><h2>combine()</h2>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>dash = fig1 + fig2 + fig3
+dash = fp.<span class="fn">combine</span>(fig1, fig2, title=<span class="st">"Dashboard"</span>)
+dash = fp.<span class="cl">Dashboard</span>().<span class="fn">add</span>(fig1).<span class="fn">add</span>(fig2)
+dash.<span class="fn">save</span>(<span class="st">"out.html"</span>)</pre></div></div>
+
+<div class="de" id="dd"><h2>Dashboard</h2>
+<table class="pt"><tr><th>Method</th><th>Returns</th><th>Description</th></tr>
+<tr><td>Dashboard(title, theme)</td><td>Dashboard</td><td>Create empty dashboard.</td></tr>
+<tr><td>.add(fig)</td><td>Dashboard</td><td>Append Figure. Chainable.</td></tr>
+<tr><td>.save(path)</td><td>str</td><td>Write HTML to disk.</td></tr>
+<tr><td>.show()</td><td>None</td><td>Open in browser.</td></tr>
+<tr><td>.to_html()</td><td>str</td><td>Return HTML string.</td></tr>
+</table></div>
+
+<div class="de" id="duz"><h2>Zoom &amp; Pan (UI)</h2><ul><li><strong>Left-drag horizontally</strong> &rarr; zoom X.</li><li><strong>Left-drag vertically</strong> &rarr; zoom Y.</li><li><strong>Double-click</strong> &rarr; reset.</li></ul></div>
+<div class="de" id="dut"><h2>Tags (UI)</h2><p>Switch to Tag tool. Drag to define region, enter name. Click bubble to navigate.</p></div>
+<div class="de" id="dua"><h2>Annotations (UI)</h2><p>Switch to Annotate. Click to drop pin, enter label. Pin hidden when outside zoom window. Sticky notes panel below. Click note to navigate.</p></div>
+<div class="de" id="dum"><h2>Measure (UI)</h2><p>Switch to Measure. Click anchor &rarr; live &#916;X and &#916;Y per series. Hover saved measurement + &times; to remove.</p></div>
+<div class="de" id="due"><h2>Export (UI)</h2><p>&#8595; Export button downloads self-contained HTML. Tags and pins preserved. Opens in any browser.</p></div>
+
+<div class="de" id="dclr"><h2>Colors</h2><ul>
+<li>Hex: <code>"#f43f5e"</code></li>
+<li>Named: <code>"rose"</code> <code>"indigo"</code> <code>"emerald"</code> <code>"orange"</code> <code>"violet"</code> <code>"cyan"</code> <code>"amber"</code> <code>"pink"</code> <code>"lime"</code> <code>"teal"</code></li>
+<li><code>None</code> &mdash; auto-cycles per Figure</li>
+</ul></div>
+
+<div class="de" id="dth"><h2>Themes</h2>
+<div class="code"><div class="cb"><div class="dots"><div class="d dr"></div><div class="d dy"></div><div class="d dg"></div></div></div><pre>fp.<span class="cl">Figure</span>(theme=<span class="st">"light"</span>)  <span class="cm"># default</span>
+fp.<span class="cl">Figure</span>(theme=<span class="st">"dark"</span>)</pre></div></div>
+
+    </div>
+  </div>
+</div>
+
+<hr>
+<footer>
+  <div class="fl">flash<em>plot</em></div>
+  <span>MIT License &middot; Built on <a href="https://github.com/leeoniya/uPlot" target="_blank">uPlot</a> by Leon Sorokin</span>
+  <div style="display:flex;gap:18px"><a href="https://github.com/YOUR_USERNAME/youplot" target="_blank">GitHub</a><a href="https://pypi.org/project/youplot" target="_blank">PyPI</a><a href="#docs">Docs</a></div>
+</footer>
+
+<script>
+function showF(id,el){
+  document.querySelectorAll('.ftab').forEach(function(t){t.classList.remove('active')});
+  document.querySelectorAll('.fd').forEach(function(d){d.classList.remove('active')});
+  el.classList.add('active');
+  document.getElementById('fd-'+id).classList.add('active');
+}
+var bars=document.querySelectorAll('.bf[data-w]');
+var bo=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.style.width=x.target.dataset.w+'%';bo.unobserve(x.target)}})},{threshold:.3});
+bars.forEach(function(b){bo.observe(b)});
+var sls=document.querySelectorAll('.sl');
+var des=document.querySelectorAll('.de');
+var no=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){sls.forEach(function(a){a.classList.remove('active')});var a=document.querySelector('.sl[href="#'+x.target.id+'"]');if(a)a.classList.add('active')}})},{rootMargin:'-10% 0px -80% 0px'});
+des.forEach(function(s){no.observe(s)});
+</script>
+</body>
+</html>

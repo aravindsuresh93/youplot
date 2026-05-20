@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "youplot"
+version = "1.0.0"
+description = "Extremely fast, lightweight timeseries charts for Python — powered by uPlot"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+keywords = ["charts", "timeseries", "visualization", "uplot", "html", "interactive", "plotting"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage     = "https://github.com/YOUR_USERNAME/youplot"
+Documentation = "https://github.com/YOUR_USERNAME/youplot#readme"
+Repository   = "https://github.com/YOUR_USERNAME/youplot"
+"Bug Tracker" = "https://github.com/YOUR_USERNAME/youplot/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["youplot*"]
+
+[tool.setuptools.package-data]
+youplot = ["vendor/*.js", "vendor/*.css"]

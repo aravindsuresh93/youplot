@@ -1,0 +1,224 @@
+Metadata-Version: 2.4
+Name: youplot
+Version: 1.0.0
+Summary: Extremely fast, lightweight timeseries charts for Python — powered by uPlot
+License: MIT
+Project-URL: Homepage, https://github.com/YOUR_USERNAME/youplot
+Project-URL: Documentation, https://github.com/YOUR_USERNAME/youplot#readme
+Project-URL: Repository, https://github.com/YOUR_USERNAME/youplot
+Project-URL: Bug Tracker, https://github.com/YOUR_USERNAME/youplot/issues
+Keywords: charts,timeseries,visualization,uplot,html,interactive,plotting
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering :: Visualization
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: license-file
+
+# youplot
+
+**Extremely fast, lightweight timeseries charts for Python — powered by [uPlot](https://github.com/leeoniya/uPlot).**
+
+Write Python. Get a fully self-contained, interactive HTML file. No server. No viewer dependencies.
+
+```
+pip install youplot
+```
+
+Requires Python 3.10+. No runtime dependencies.
+
+---
+
+## Benchmark (Apple M2 Pro, Python 3.11, 3 series, median of 3 runs)
+
+| Library    | 1K pts | 10K pts | 100K pts | 500K pts | Output          |
+|------------|--------|---------|----------|----------|-----------------|
+| **youplot** | **2ms** | **18ms** | **176ms** | **892ms** | Interactive HTML |
+| Plotly     | 16ms   | 81ms    | 676ms    | 3.36s    | Interactive HTML |
+| Bokeh      | 27ms   | 100ms   | 835ms    | 4.14s    | Interactive HTML |
+| Matplotlib | 95ms   | 125ms   | 355ms    | 926ms    | Static PNG †    |
+
+† Matplotlib produces a static raster image with no interactivity.  
+At 500K points: **3.8× faster than Plotly, 4.6× faster than Bokeh.**  
+youplot's bundled JS runtime is **50 KB**; Plotly's is 3.5 MB.
+
+Run `python benchmark.py` to reproduce.
+
+---
+
+## Quickstart
+
+```python
+import youplot as fp
+
+# Unix milliseconds on the x axis
+ts_ms = [1_700_000_000_000 + i * 1000 for i in range(86_400)]
+
+fig = fp.Figure(title="24h Temperature", zoom=True, legend=True)
+fig.line(ts_ms, temp,     label="°C",       color="#f97316", fill=True)
+fig.band(y_lo=18, y_hi=24, label="Comfort",  color="#10b981")
+fig.vline(x=ts_ms[3600],   label="Event",    color="#dc2626")
+fig.save("temperature.html")   # open in any browser, no install
+```
+
+### Multi-chart dashboard with crosshair sync
+
+```python
+fig1 = fp.Figure(title="Engine", height=380, zoom=True)
+fig1.line(ts_ms, coolant, label="Coolant °C", color="#ef4444")
+fig1.line(ts_ms, oil,     label="Oil °C",     color="#f97316", dash=True)
+fig1.tag(x_start=fault_start, x_end=fault_end, label="Fault window")
+fig1.pin(ts_ms[peak_idx], label="Peak: 127°C", y_frac=0.1)
+
+fig2 = fp.Figure(title="RPM & Fuel", height=280, zoom=True)
+fig2.line(ts_ms, rpm,      label="RPM",      color="#6366f1")
+fig2.line(ts_ms, fuel_psi, label="Fuel PSI", color="#16a34a")
+
+# Hover on one → cursor syncs on both, each shows its own tooltip
+dash = fig1 + fig2                            # or fp.combine(fig1, fig2)
+dash.save("engine.html")
+```
+
+---
+
+## API
+
+### Figure
+
+```python
+fig = fp.Figure(
+    title    = "My Chart",
+    subtitle = "Optional subtitle",
+    theme    = "light",       # "light" | "dark"
+    height   = 400,
+    width    = None,          # None = 100% container width
+    y_label  = "Signal",
+    zoom     = True,          # toolbar: zoom/tag/measure/annotate/export
+    legend   = True,
+)
+```
+
+All methods return `self` for chaining.
+
+#### fig.line()
+
+```python
+fig.line(x, y, label="", color=None, width=2.0, dash=False,
+         fill=False, fill_opacity=0.15, points=False, step=False,
+         hover_unit="", hover_format="")
+```
+
+#### fig.scatter()
+
+```python
+fig.scatter(x, y, label="", color=None, size=6.0,
+            size_by=None, color_by=None, shape="circle",
+            trendline=False, jitter_x=0.0, jitter_y=0.0)
+```
+
+#### fig.band()
+
+```python
+fig.band(y_lo=18, y_hi=24, label="Comfort", color="#10b981", opacity=0.12)
+```
+
+#### fig.vline() / fig.hline()
+
+```python
+fig.vline(x=ts_ms[fault_idx], label="Fault", color="#dc2626")
+fig.hline(y=100, label="Max safe", color="#f97316", dash=True)
+```
+
+#### fig.region()
+
+```python
+fig.region(x_start=ts_ms[0], x_end=ts_ms[3600], label="Night",
+           color="indigo", opacity=0.06)
+```
+
+#### fig.tag()
+
+Named region with a coloured header band and clickable bubble below the chart.
+
+```python
+fig.tag(x_start=ts_ms[fault_start], x_end=ts_ms[fault_end],
+        label="Fault window", color="#f43f5e", removable=True)
+```
+
+#### fig.pin()
+
+Annotation pin on the canvas + sticky-note card below the chart.
+
+```python
+fig.pin(x=ts_ms[peak_idx], label="Peak: 127°C", y_frac=0.1, color="")
+```
+
+`y_frac` sets vertical position: 0 = top of plot, 1 = bottom.  
+Leave `color=""` to auto-cycle through the annotation palette.
+
+#### Output
+
+```python
+fig.save("out.html")     # write to disk, returns path
+fig.show()               # save to /tmp, open in browser
+html = fig.to_html()     # return HTML string
+frag = fig.to_fragment() # fragment (no <head>/<body>) for embedding
+```
+
+### Dashboard / combine
+
+```python
+dash = fig1 + fig2 + fig3                         # operator
+dash = fp.combine(fig1, fig2, fig3, title="...")   # function
+dash = fp.Dashboard(title="...").add(fig1).add(fig2)  # builder
+
+dash.save("dashboard.html")
+dash.show()
+```
+
+### Colors
+
+- Hex: `"#f43f5e"`
+- Named: `"rose"` `"indigo"` `"emerald"` `"orange"` `"violet"` `"cyan"` `"amber"` `"pink"` `"lime"` `"teal"`
+- `None` — auto-cycles per Figure
+
+### Themes
+
+```python
+fp.Figure(theme="light")   # default
+fp.Figure(theme="dark")
+```
+
+---
+
+## UI Tools (when zoom=True)
+
+| Tool      | How to use |
+|-----------|-----------|
+| **Zoom**  | Left-drag X to zoom. Vertical drag zooms Y. Double-click resets. |
+| **Tag**   | Drag to name a region. Click bubble to navigate. |
+| **Measure** | Click anchor, move to see ΔX/ΔY live. |
+| **Annotate** | Click to drop a pin. |
+| **Export** | Download current state (tags + annotations) as HTML. |
+
+---
+
+## Built on uPlot
+
+youplot is a Python API layer over [uPlot](https://github.com/leeoniya/uPlot) by Leon Sorokin.  
+uPlot renders 1M points in <35ms, ships at 50KB with zero dependencies.  
+All rendering performance comes from uPlot. Please ⭐ the repository.
+
+---
+
+## License
+
+MIT © youplot contributors
